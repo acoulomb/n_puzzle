@@ -16,7 +16,10 @@ func main() {
 	if err != nil {
 		fmt.Printf(red("▶ WARNING : %s \n"), err)
 	}
-	_ = starting_puzzle
+	end_puzzle := get_end_state(starting_puzzle)
+	// mLat, mLon := mapEndState(end_puzzle)
+	// fmt.Println(mLat, mLon)
 	fmt.Println(starting_puzzle)
+	fmt.Println(end_puzzle, len(end_puzzle))
 	return
 }

@@ -90,6 +90,8 @@ func move(tree []map[int]pos, lastmove int, base [][]int, EndHash, hashBase map[
 	return bestMove, bestCopy
 }
 
+// need to rollback when bestmove==0
+
 func GreedyResolve(base [][]int, EndHash map[int]pos) {
 	bestMove := -1
 	StockTree := make([]map[int]pos, 0)

@@ -1,26 +1,22 @@
 package main
 
-type getNb struct {
-	Nb  []int
-	Pos []int
+type pos struct {
+	Lat, Lon int
 }
 
-func (data *getNb) AppendPos(nb int, pos int) {
-	data.Nb = append(data.Nb, nb)
-	data.Pos = append(data.Pos, pos)
-}
+var m map[int]pos
 
-func mapEndState(endMap [][]int) (*getNb, *getNb) {
-	// lat := make(map[int]int)
-	lat := &getNb{[]int{}, []int{}}
-	lon := &getNb{[]int{}, []int{}}
-	for i := 0; i < len(endMap); i++ {
-		for r := 0; r < len(endMap); r++ {
-			lat.AppendPos(endMap[i][r], i)
-			lon.AppendPos(endMap[i][r], r)
+func HashMap(endMap [][]int) map[int]pos {
+	m = make(map[int]pos)
+	for i, line := range endMap {
+		for r, nb := range line {
+			m[nb] = pos{
+				i, r,
+			}
 		}
+		_ = i
 	}
-	return lat, lon
+	return m
 }
 
 func get_end_state(starting_puzzle [][]int) [][]int {
@@ -44,7 +40,7 @@ func get_end_state(starting_puzzle [][]int) [][]int {
 	itt := 0
 	lat := 0
 	lon := len(end_puzzle) - 1
-	for nb < totalnb {
+	for nb <= totalnb {
 		switch dir {
 		case 1:
 			for i := 0; i < move; i++ {
@@ -52,7 +48,6 @@ func get_end_state(starting_puzzle [][]int) [][]int {
 				end_puzzle[lat][lon] = nb
 				nb++
 			}
-			lon--
 			dir = 2
 		case 2:
 			for i := 0; i < move; i++ {
@@ -60,7 +55,6 @@ func get_end_state(starting_puzzle [][]int) [][]int {
 				end_puzzle[lat][lon] = nb
 				nb++
 			}
-			lat--
 			dir = 3
 		case 3:
 			for i := 0; i < move; i++ {
@@ -68,7 +62,6 @@ func get_end_state(starting_puzzle [][]int) [][]int {
 				end_puzzle[lat][lon] = nb
 				nb++
 			}
-			lon++
 			dir = 4
 		case 4:
 			for i := 0; i < move; i++ {
@@ -76,7 +69,6 @@ func get_end_state(starting_puzzle [][]int) [][]int {
 				end_puzzle[lat][lon] = nb
 				nb++
 			}
-			lat++
 			dir = 1
 		}
 		itt++

@@ -17,9 +17,11 @@ func main() {
 		fmt.Printf(red("▶ WARNING : %s \n"), err)
 	}
 	end_puzzle := get_end_state(starting_puzzle)
-	// mLat, mLon := mapEndState(end_puzzle)
-	// fmt.Println(mLat, mLon)
-	fmt.Println(starting_puzzle)
+	_ = end_puzzle
+	hashPos := HashMap(end_puzzle)
+	// fmt.Println(manhattan_heuristic(starting_puzzle, hashPos))
+	aStarResolve(starting_puzzle, hashPos)
+	// fmt.Println(starting_puzzle)
+	// fmt.Println(hashPos)
 	fmt.Println(end_puzzle, len(end_puzzle))
-	return
 }

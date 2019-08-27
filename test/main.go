@@ -20,7 +20,7 @@ func main() {
 	_ = end_puzzle
 	hashPos := HashMap(end_puzzle)
 	// fmt.Println(manhattan_heuristic(starting_puzzle, hashPos))
-	aStarResolve(starting_puzzle, hashPos)
+	GreedyResolve(starting_puzzle, hashPos)
 	// fmt.Println(starting_puzzle)
 	// fmt.Println(hashPos)
 	fmt.Println(end_puzzle, len(end_puzzle))

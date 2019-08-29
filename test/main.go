@@ -25,6 +25,7 @@ func main() {
 	 */
 	// GreedyResolve(starting_puzzle, hashPos)
 	// GreedyResolve(starting_puzzle, hashPos)
+	// aStarWoutHeuristic(starting_puzzle, hashPos)
 	aStar(starting_puzzle, hashPos)
 	// fmt.Println(starting_puzzle)
 	// fmt.Println(hashPos)

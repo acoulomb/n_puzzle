@@ -3,6 +3,8 @@ package main
 // math.Abs in go takes float64 && it's penible to cast everything in int
 func zouaveAbs(n int) int {
 	y := n >> 63
+	// fmt.Println(reflect.TypeOf(y), y)
+	// os.Exit(32)
 	return (n ^ y) - y
 }
 

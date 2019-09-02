@@ -29,5 +29,5 @@ func main() {
 	aStar(starting_puzzle, hashPos)
 	// fmt.Println(starting_puzzle)
 	// fmt.Println(hashPos)
-	fmt.Println(end_puzzle, len(end_puzzle))
+	// fmt.Println(end_puzzle, len(end_puzzle))
 }

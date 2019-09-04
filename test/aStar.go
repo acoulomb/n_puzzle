@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"sort"
@@ -75,16 +74,18 @@ func sortArrayByHeuristic(possibleMove []ltreegraph) []ltreegraph {
 	return possibleMove
 }
 
-// var deep int
+var deep int
 
 func startTurn(StockTree []map[int]pos, tree ltreegraph, EndHash map[int]pos) {
 	possibleMove := arrayOfMoves(tree, EndHash)
 	for i := 0; i < len(possibleMove); i++ {
 		if reflect.DeepEqual(tree.hash, EndHash) {
+			iDidntWriteThat(tree, i)
 			os.Exit(1)
 		}
 	}
-	fmt.Println(possibleMove[0].parent)
+	// fmt.Println(possibleMove[0].hash)
+	// fmt.Println(StockTree)
 	// start := 0
 	// copymove := possibleMove[0]
 	// for copymove.parent != nil {
@@ -105,7 +106,12 @@ func startTurn(StockTree []map[int]pos, tree ltreegraph, EndHash map[int]pos) {
 	possibleMove = sortArrayByHeuristic(possibleMove)
 	for len(possibleMove) > 0 {
 		// fmt.Println(possibleMove)
-		startTurn(StockTree, possibleMove[0], EndHash)
+		if checkPatern(StockTree, possibleMove[0].hash) {
+			StockTree = append(StockTree, possibleMove[0].hash)
+			go func() {
+				startTurn(StockTree, possibleMove[0], EndHash)
+			}()
+		}
 		possibleMove[0] = possibleMove[len(possibleMove)-1]
 		possibleMove = possibleMove[:len(possibleMove)-1]
 		possibleMove = sortArrayByHeuristic(possibleMove)

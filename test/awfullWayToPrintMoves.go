@@ -4,9 +4,8 @@ import (
 	"fmt"
 )
 
-func iDidntWriteThat(tree ltreegraph, finalMove int) {
+func iDidntWriteThat(tree ltreegraph) {
 	var move []int
-	move = append(move, finalMove)
 	for tree.parent != nil {
 		move = append([]int{tree.lastMove}, move...)
 		tree = *tree.parent

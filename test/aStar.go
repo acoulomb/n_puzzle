@@ -1,10 +1,7 @@
 package main
 
 import (
-	"os"
-	"reflect"
-	"sort"
-	"strings"
+	"fmt"
 )
 
 type ltreegraph struct {
@@ -18,26 +15,42 @@ type ltreegraph struct {
 	parent    *ltreegraph
 }
 
-func arrayOfMoves(tree ltreegraph, EndHash map[int]pos) []ltreegraph {
-	var possibleMove []ltreegraph
+func insertInTree(gTree []ltreegraph, child ltreegraph) []ltreegraph {
+	for i:= 0; i<= len(gTree); i++ {
+		if i == len(gTree) {
+			gTree = append(gTree, child)
+			break
+		}
+		if child.heuristic < gTree[i].heuristic {
+			gTree = append(gTree[:i], append([]ltreegraph{child}, gTree[i:]...)...)
+			break
+		}
+	}
+	return gTree
+}
+
+func arrayOfMove(gTree []ltreegraph, EndHash map[int]pos, StockTree []map[int]pos) []ltreegraph{
+	tree := gTree[0]
+	gTree = gTree[1:]
 	var toChange int
-	for r := 0; r < 4; r++ {
+	for r:= 0; r< 4; r++ {
 		nMap := make(map[int]pos)
 		child := new(ltreegraph)
 		child.parent = &tree
-		if r == 0 {
+		switch r {
+		case 0:
 			tree.up = child
 			child.lastMove = 0
 			toChange = keysByValue(tree.hash, tree.hash[0].Lat-1, tree.hash[0].Lon)
-		} else if r == 1 {
+		case 1:
 			tree.down = child
 			child.lastMove = 1
 			toChange = keysByValue(tree.hash, tree.hash[0].Lat+1, tree.hash[0].Lon)
-		} else if r == 2 {
+		case 2:
 			tree.left = child
 			child.lastMove = 2
 			toChange = keysByValue(tree.hash, tree.hash[0].Lat, tree.hash[0].Lon-1)
-		} else {
+		case 3:
 			tree.right = child
 			child.lastMove = 3
 			toChange = keysByValue(tree.hash, tree.hash[0].Lat, tree.hash[0].Lon+1)
@@ -56,75 +69,31 @@ func arrayOfMoves(tree ltreegraph, EndHash map[int]pos) []ltreegraph {
 		}
 		child.heuristic = manWithHash(nMap, EndHash)
 		child.hash = nMap
-		possibleMove = append(possibleMove, *child)
+		if (checkPatern(StockTree, child.hash)) {
+			gTree = insertInTree(gTree, *child)
+		}
 	}
-	return possibleMove
+	return gTree
 }
 
-func sortArrayByHeuristic(possibleMove []ltreegraph) []ltreegraph {
-	sort.Slice(possibleMove, func(i, j int) bool {
-		switch strings.Compare(string(possibleMove[i].heuristic), string(possibleMove[j].heuristic)) {
-		case -1:
-			return true
-		case 1:
-			return false
-		}
-		return possibleMove[i].heuristic > possibleMove[j].heuristic
-	})
-	return possibleMove
-}
-
-var deep int
-
-func startTurn(StockTree []map[int]pos, tree ltreegraph, EndHash map[int]pos) {
-	possibleMove := arrayOfMoves(tree, EndHash)
-	for i := 0; i < len(possibleMove); i++ {
-		if reflect.DeepEqual(tree.hash, EndHash) {
-			iDidntWriteThat(tree, i)
-			os.Exit(1)
-		}
+func startTurn(StockTree []map[int]pos, gTree []ltreegraph, EndHash map[int]pos) {
+	for ;gTree[0].heuristic != 0; {
+		StockTree = append(StockTree, gTree[0].hash)
+		gTree = arrayOfMove(gTree, EndHash, StockTree)
 	}
-	// fmt.Println(possibleMove[0].hash)
-	// fmt.Println(StockTree)
-	// start := 0
-	// copymove := possibleMove[0]
-	// for copymove.parent != nil {
-	// 	copymove = *copymove.parent
-	// 	start++
-	// }
-	// if start > deep {
-	// 	fmt.Printf("dept is %d\n", start)
-	// 	deep = start
-	// }
-	// if loop == 10 {
-	// 	os.Exit(-1)
-	// }
-	// loop++
-	// for _, ltree := range possibleMove {
-	// 	fmt.Println("test", ltree)
-	// }
-	possibleMove = sortArrayByHeuristic(possibleMove)
-	for len(possibleMove) > 0 {
-		// fmt.Println(possibleMove)
-		if checkPatern(StockTree, possibleMove[0].hash) {
-			StockTree = append(StockTree, possibleMove[0].hash)
-			go func() {
-				startTurn(StockTree, possibleMove[0], EndHash)
-			}()
-		}
-		possibleMove[0] = possibleMove[len(possibleMove)-1]
-		possibleMove = possibleMove[:len(possibleMove)-1]
-		possibleMove = sortArrayByHeuristic(possibleMove)
-	}
-	// //pop element of slice
-	// r := 0
+	iDidntWriteThat(gTree[0])
 	return
 }
 
+
 func aStar(base [][]int, EndHash map[int]pos) {
+	var gTree []ltreegraph
+	fmt.Println("beginaStar")
 	tree := new(ltreegraph)
 	tree.hash = HashMap(base)
+	tree.heuristic = 42
+	gTree = append(gTree, *tree)
 	StockTree := make([]map[int]pos, 0)
-	startTurn(StockTree, *tree, EndHash)
+	startTurn(StockTree, gTree, EndHash)
 	return
 }

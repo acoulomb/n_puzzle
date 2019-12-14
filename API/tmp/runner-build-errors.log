@@ -1,0 +1,3 @@
+# _/Users/oespion/npuzzule/API
+./result.go:4:2: imported and not used: "fmt"
+./result.go:5:2: imported and not used: "crypto/sha1"

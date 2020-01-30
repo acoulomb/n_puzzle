@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const result = await axios(
-        '/?area=5%208%200%20-%202%204%207%20-%206%203%201',
+        '/',
       );
       setData(result);
       console.log(result)

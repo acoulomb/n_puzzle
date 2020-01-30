@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"crypto/sha1"
+
 )
 
 type pos struct {

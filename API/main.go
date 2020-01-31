@@ -39,7 +39,15 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		area := c.Query("area")
-		c.String(http.StatusOK, "%d", resolve(area))
+
+		c.Header("Content-Type", "application/json")
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("AllowMethods", "GET, POST")
+		c.Header("Access-Control-Allow-Headers", "Content-Type")
+		c.Header("AllowCredentials", "true")
+		c.JSON(http.StatusOK, gin.H {
+			"res": resolve(area),
+		})
 	})
 	router.Run(":8080")
 }

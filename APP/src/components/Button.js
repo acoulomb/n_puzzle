@@ -4,7 +4,7 @@ import * as event from '../actions/server.js'
 
 function Button({ onClickBtn, type, text }) {
   return (
-    <button className={"btn " + type} onClick={onClickBtn}>{text}</button>
+    <button id={type} className="btn" onClick={onClickBtn}>{text}</button>
   )
 }
 
